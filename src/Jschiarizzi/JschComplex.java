@@ -23,14 +23,22 @@ public class JschComplex extends ComplexNumber{
 
     @Override
     public double magnitude() {
-
+        //double mag = Math.sqrt((this.re * this.re) + (this.im * this.im));
+        //System.out.println("Mag: " + mag);
+        //return mag;
         return Math.sqrt((this.re * this.re) + (this.im * this.im));
-        //return 0;
     }
 
     @Override
     public double angle() {
-        return Math.atan2(this.re,this.im);
+       this.angle = Math.atan2(this.im,this.re);
+
+        //System.out.println("Angle: " + angle);
+
+        if(angle < 0){
+            angle = (2*Math.PI) - (-1*angle);
+        }
+        return this.angle;
     }
 
     @Override
@@ -46,45 +54,67 @@ public class JschComplex extends ComplexNumber{
     }
 
     @Override
-    public ComplexNumber mult(ComplexNumber c) {
+    public ComplexNumber mult(ComplexNumber b) {
+        JschComplex c = (JschComplex) b;
+        double real = c.re;
+        double imag = c.im;
 
+        //System.out.println("Multiplying ( " + this.re + " + i" + this.im + " ) by (" + c.re + " + i" + c.im + " )");
 
-        return null;
+        c.re = (this.re * real) - (this.im * imag);
+        c.im = (this.re * imag) + (this.im * real);
+
+        //System.out.println("I got " + c.re + " + " + c.im + "i.");
+
+        return new JschComplex(c.re, c.im);
     }
 
     @Override
     public ComplexNumber mult(double a) {
+
+        //System.out.println("multiplying by " + a);
 
         return new JschComplex(this.re * a, this.im * a);
     }
 
     @Override
     public ComplexNumber pow(int n) {
-            double real = re;
-            double imag = im;
+
+            JschComplex c = new JschComplex(this.re, this.im); //new object to save this object and still return a new one.
+            JschComplex orig = new JschComplex(c.re, c.im);
+
+            //System.out.println("n = " + n);
+            //System.out.println("Taking power of " + this.re + " + " + this.im + "i.");
+
 
             //start check special case
             if(n == 0) {
                 return new JschComplex(1,1);
             }
             else if(n > 0) {
-                for (int i = 1; i < n; i++) {
-                    real = real * re;
-                    imag = imag * im;
+                for(int i = 1; i < n; i++) {
+                    c = (JschComplex) mult(orig);
                 }
 
-                return new JschComplex(real, imag);
+                return new JschComplex(c.re, c.im);
 
             }else if(n < 0){
-                System.out.println("nyi");
+
+                for(int i = 1; i < n; i++) {
+                    c = (JschComplex) mult(orig);
+                }
+
+                c.re = 1/c.re;
+                c.im = 1/c.im;
             }
-        return new JschComplex(real, imag);
+        return new JschComplex(c.re, c.im);
     }
+
 
     @Override
     public ComplexNumber conjugate() {
-        return new JschComplex() ;
 
+        return new JschComplex(this.re,(-1*this.im));
     }
 
 }
