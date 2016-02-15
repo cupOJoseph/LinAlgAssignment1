@@ -29,19 +29,21 @@ public class JschLinTool extends LinToolEmpty {
     }
 
     public  double norm (double[] v){
-    //TODO fix this shit
+
+        //TODO fix this shit
+
         double total = 0;
 
         if(v == null){
             return -1;
         }
 
-        int size = v.length;
-        for(int i = 0; i < size; i++){
-            total += Math.pow(v[i],size);
+
+        for(int i = 0; i < v.length; i++){
+            total += v[i] * v[i];
         }
 
-        return Math.pow(total,(1/size));
+        return Math.sqrt(total);
     }
 
     public  double dotProduct (double[] u, double[] v){
